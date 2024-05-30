@@ -1,16 +1,6 @@
 <?php
 
 namespace Dragonzap\NeuralNetwork;
-
-error_reporting(E_ALL | E_STRICT);
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-    if (!(error_reporting() & $errno)) {
-        return false;
-    }
-
-    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-});
-
 use Dragonzap\Exceptions\BadNetworkParameterException;
 use Dragonzap\Exceptions\CriticalTrainingErrorException;
 
