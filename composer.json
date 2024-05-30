@@ -1,0 +1,24 @@
+{
+    "name": "dragonzap/neuralnetwork",
+    "description": "Used for building neural networks in PHP",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Dragonzap\\": "src/Dragonzap/"
+        }
+    },    
+    "authors": [
+        {
+            "name": "Dragon Zap Publishing"
+        }
+    ],
+    "require": {
+
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
