@@ -231,4 +231,61 @@ class NeuralNetwork
         fclose($tmp_output_file_handle);
         unlink($tmp_output_file);
     }
+
+    public function saveNetwork(string $filename) {
+        $data = [
+            'total_input_neurons' => $this->total_input_neurons,
+            'total_output_neurons' => $this->total_output_neurons,
+            'learning_rate' => $this->learningRate,
+            'epochs' => $this->epochs,
+            'total_hidden_layer_neurons' => $this->total_hidden_layer_neurons,
+            'total_hidden_layers' => $this->total_hidden_layers,
+            'activation_function' => $this->activation_function,
+            'layers' => []
+        ];
+
+        foreach ($this->layers as $layer) {
+            $layer_data = [
+                'neurons' => []
+            ];
+
+            foreach ($layer->neurons as $neuron) {
+                $neuron_data = [
+                    'weights' => $neuron->weights,
+                    'output' => $neuron->output,
+                    'delta' => $neuron->delta
+                ];
+
+                $layer_data['neurons'][] = $neuron_data;
+            }
+
+            $data['layers'][] = $layer_data;
+        }
+
+        file_put_contents($filename, json_encode($data));
+    }
+
+    public static function loadNetwork(string $filename) : NeuralNetwork
+    {
+        $data = json_decode(file_get_contents($filename), true);
+        $network = new NeuralNetwork($data['total_input_neurons'], $data['total_output_neurons'], $data['learning_rate'], $data['epochs'], $data['total_hidden_layer_neurons'], $data['total_hidden_layers'], $data['activation_function']);
+
+        foreach ($data['layers'] as $layer_data) {
+            $layer = new Layer(0, 0);
+            $layer->neurons = [];
+
+            foreach ($layer_data['neurons'] as $neuron_data) {
+                $neuron = new Neuron(0);
+                $neuron->weights = $neuron_data['weights'];
+                $neuron->output = $neuron_data['output'];
+                $neuron->delta = $neuron_data['delta'];
+
+                $layer->neurons[] = $neuron;
+            }
+
+            $network->layers[] = $layer;
+        }
+
+        return $network;
+    }
 }
