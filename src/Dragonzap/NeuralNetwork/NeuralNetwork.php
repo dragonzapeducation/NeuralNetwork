@@ -258,24 +258,39 @@ class NeuralNetwork
     public static function loadNetwork(string $filename) : NeuralNetwork
     {
         $data = json_decode(file_get_contents($filename), true);
-        $network = new NeuralNetwork($data['total_input_neurons'], $data['total_output_neurons'], $data['learning_rate'], $data['epochs'], $data['total_hidden_layer_neurons'], $data['total_hidden_layers'], $data['activation_function']);
-
+        $network = new NeuralNetwork(
+            $data['total_input_neurons'],
+            $data['total_output_neurons'],
+            $data['learning_rate'],
+            $data['epochs'],
+            $data['total_hidden_layer_neurons'],
+            $data['total_hidden_layers'],
+            $data['activation_function']
+        );
+    
+        // Clear the initially created layers
+        $network->layers = [];
+    
         foreach ($data['layers'] as $layer_data) {
-            $layer = new Layer(0, 0);
+            $neuron_count = count($layer_data['neurons']);
+            $prev_neuron_count = count($network->layers) == 0 ? $data['total_input_neurons'] : count($network->layers[count($network->layers) - 1]->neurons);
+            
+            $layer = new Layer($neuron_count, $prev_neuron_count);
             $layer->neurons = [];
-
+    
             foreach ($layer_data['neurons'] as $neuron_data) {
-                $neuron = new Neuron(0);
+                $neuron = new Neuron($prev_neuron_count);
                 $neuron->weights = $neuron_data['weights'];
                 $neuron->output = $neuron_data['output'];
                 $neuron->delta = $neuron_data['delta'];
-
+    
                 $layer->neurons[] = $neuron;
             }
-
+    
             $network->layers[] = $layer;
         }
-
+    
         return $network;
     }
+    
 }
