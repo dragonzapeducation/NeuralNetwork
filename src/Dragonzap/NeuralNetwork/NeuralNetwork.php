@@ -33,6 +33,23 @@ class NeuralNetwork
         $this->initializeLayers();
     }
 
+
+    public function getTotalInputNeurons()
+    {
+        return $this->total_input_neurons;
+    }
+
+    public function getTotalOutputNeurons()
+    {
+        return $this->total_input_neurons;
+    }
+
+    public function getLayers()
+    {
+        return $this->layers;
+    }
+
+
     private function initializeLayers()
     {
         for ($i = 0; $i < $this->total_hidden_layers; $i++) {
